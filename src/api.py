@@ -2,11 +2,19 @@ import json
 import urllib.request
 import urllib.error
 import re
+import time
 from aqt import mw
 from aqt.utils import showCritical
 
 # Import from our new utils file
 from .utils import get_config, update_note_fields
+
+
+def _save_media_and_update(note_id, new_s, new_t, audio_filename, audio_data):
+    """Helper to safely write media and update note on the main thread."""
+    if audio_filename and audio_data:
+        mw.col.media.write_data(audio_filename, audio_data)
+    update_note_fields(note_id, new_s, new_t, audio_filename)
 
 
 def generate_sentence_task(note_id, target_word, prev_sentence, prev_translation):
@@ -52,6 +60,7 @@ def generate_sentence_task(note_id, target_word, prev_sentence, prev_translation
 
         headers = {"Content-Type": "application/json", "Authorization": f"Bearer {api_key}"}
 
+        # 1. GENERATE TEXT
         req = urllib.request.Request(
             url=endpoint, data=json.dumps(payload).encode("utf-8"), headers=headers, method="POST"
         )
@@ -64,15 +73,45 @@ def generate_sentence_task(note_id, target_word, prev_sentence, prev_translation
 
         if content:
             parsed = json.loads(content)
-            new_s = parsed.get("sentence", "").strip()
+            clean_s = parsed.get("sentence", "").strip()
             new_t = parsed.get("translation", "").strip()
 
-            # Regex Wrapping Logic
+            # Regex Wrapping Logic for text field
             pattern = re.compile(re.escape(target_word), re.IGNORECASE)
-            new_s = pattern.sub(r"<b>\g<0></b>", new_s)
+            new_s_html = pattern.sub(r"<b>\g<0></b>", clean_s)
+
+            # 2. GENERATE AUDIO
+            audio_filename = None
+            audio_data = None
+            if config.get("generate_audio", False):
+                try:
+                    tts_endpoint = "https://api.openai.com/v1/audio/speech"
+                    tts_payload = {
+                        "model": "tts-1",
+                        "voice": config.get("audio_voice", "alloy"),
+                        "input": clean_s,  # Send the clean string, not the <b> wrapped HTML
+                    }
+                    tts_req = urllib.request.Request(
+                        url=tts_endpoint,
+                        data=json.dumps(tts_payload).encode("utf-8"),
+                        headers=headers,  # Reuse authorization headers
+                        method="POST",
+                    )
+                    with urllib.request.urlopen(tts_req, timeout=15) as tts_res:
+                        audio_data = tts_res.read()
+
+                    # Sanitize target word to prevent file system errors (keeps alphanumeric & characters, replaces rest with _)
+                    safe_target_word = re.sub(r"[^\w\-]", "_", target_word)
+
+                    # Create a unique filename for Anki's media folder including the target word
+                    audio_filename = f"yujing_{safe_target_word}_{note_id}_{int(time.time())}.mp3"
+                except Exception as audio_e:
+                    print(f"Yujing Audio Error: {str(audio_e)}")
 
             # Update the note in the main thread
-            mw.taskman.run_on_main(lambda: update_note_fields(note_id, new_s, new_t))
+            mw.taskman.run_on_main(
+                lambda: _save_media_and_update(note_id, new_s_html, new_t, audio_filename, audio_data)
+            )
         else:
             raise ValueError("Failed to retrieve generated content from API response.")
 
@@ -86,5 +125,5 @@ def generate_sentence_task(note_id, target_word, prev_sentence, prev_translation
                 pass
 
         print(f"Yujing Error: {error_msg}")
-        if config.get("report_errors"):
-            mw.taskman.run_on_main(lambda: showCritical(f"Yujing Background Generation Failed:\n\n{error_msg}"))
+        mw.taskman.run_on_main(lambda: showCritical(f"Yujing Background Generation Failed:\n\n{error_msg}"))
+

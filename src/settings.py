@@ -23,7 +23,11 @@ class YujingSettingsDialog(QDialog):
         self.api_key.setEchoMode(QLineEdit.EchoMode.Password)
         self.model = QLineEdit()
         self.target_field = QLineEdit()
-        self.report_errors = QCheckBox("Report Errors (popups)")
+
+        # Audio UI Elements
+        self.generate_audio = QCheckBox("Generate Audio (TTS)")
+        self.audio_voice = QComboBox()
+        self.audio_voice.addItems(["alloy", "echo", "fable", "onyx", "nova", "shimmer"])
 
         self.prompt_template = QTextEdit()
         self.prompt_template.setAcceptRichText(False)
@@ -33,7 +37,8 @@ class YujingSettingsDialog(QDialog):
         form.addRow("API Key:", self.api_key)
         form.addRow("Model:", self.model)
         form.addRow("Target Word Field:", self.target_field)
-        form.addRow("", self.report_errors)
+        form.addRow("", self.generate_audio)
+        form.addRow("Audio Voice:", self.audio_voice)
 
         layout.addLayout(form)
         layout.addWidget(
@@ -54,7 +59,14 @@ class YujingSettingsDialog(QDialog):
         self.api_key.setText(config.get("api_key", ""))
         self.model.setText(config.get("model", "gpt-3.5-turbo"))
         self.target_field.setText(config.get("target_field", "Word"))
-        self.report_errors.setChecked(config.get("report_errors", False))
+
+        # Load Audio config
+        self.generate_audio.setChecked(config.get("generate_audio", True))
+        voice = config.get("audio_voice", "alloy")
+        index = self.audio_voice.findText(voice)
+        if index >= 0:
+            self.audio_voice.setCurrentIndex(index)
+
         self.prompt_template.setPlainText(config.get("prompt_template", ""))
 
     def get_new_config(self):
@@ -63,7 +75,8 @@ class YujingSettingsDialog(QDialog):
             "api_key": self.api_key.text(),
             "model": self.model.text(),
             "target_field": self.target_field.text(),
-            "report_errors": self.report_errors.isChecked(),
+            "generate_audio": self.generate_audio.isChecked(),
+            "audio_voice": self.audio_voice.currentText(),
             "prompt_template": self.prompt_template.toPlainText(),
         }
 

@@ -27,10 +27,11 @@
       "description": "Use {Target}, {Generated Sentence}, and {Generated Translation} as placeholders. Ensure the prompt asks for i+1 logic.",
       "format": "multiline"
     },
-    "report_errors": {
-      "type": "boolean",
-      "title": "Report Errors",
-      "description": "If enabled, the extension will show a popup notification if a background generation fails."
+    "audio_voice": {
+      "type": "string",
+      "title": "Audio Voice",
+      "description": "OpenAI voice to use (alloy, echo, fable, onyx, nova, shimmer)",
+      "enum": ["alloy", "echo", "fable", "onyx", "nova", "shimmer"]
     }
   }
 }

@@ -21,3 +21,4 @@ src/proto/
 vendor/
 node_modules/
 TODO.md
+repomix-output.*
