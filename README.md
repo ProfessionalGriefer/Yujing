@@ -1,12 +1,53 @@
 # Yujing (语境)
+### AI-Powered Example Sentence and Audio Generator for Anki
 
-- Anki Extension
-- Extension should only work on cards that have the fields `Generated Sentence` and `Generated Translation`.
-- Provide OpenAPI compatible endpoint + API Key in the settings menu.
-- You can also edit the prompt template in the settings menu, but it should contain `{Generated Sentence}` and `{Generated Translation}` as placeholders for the generated sentence and translation respectively.
-- `{Generated Sentence}` and `{Generated Translation}` is empty for new cards.
-- When the user enters *Again* or *Hard*, nothing happens.
-- When the user enters *Good* or *Easy*, the extension will generate a new sentence and update the card's fields `Generated Sentence` and `Generated Translation` with the new values.
-- The sentence generation should happen in the background, so that the user can continue reviewing without waiting for the generation to complete.
-- A `i + 1` system would be best. That means that the word that the user should know all context words. The default prompt should mention that.
+Yujing (语境) is an Anki add-on designed to provide dynamic context for language learners. It utilizes the OpenAI API to generate new example sentences and corresponding audio for specific cards during the review process. This prevents the "stagnation" of seeing the same example sentence repeatedly, ensuring that each time a word is reviewed, it is presented in a fresh context.
 
+---
+
+## Core Features
+
+- **Background Generation**: Sentence and audio generation occurs in a background thread. This allows the user to continue their review session without waiting for the API response.
+- **i+1 Principle**: The default prompt instructs the AI to generate sentences using simple vocabulary, ensuring that the target word is the only unfamiliar element in the sentence.
+- **Text-to-Speech (TTS)**: The add-on uses OpenAI’s `audio/speech` endpoint to generate high-quality MP3 files, which are saved to the Anki media folder and linked to the card.
+- **Automatic Highlighting**: The add-on identifies the target word within the new sentence and applies `<b>` tags automatically for visual clarity.
+- **Configurable Settings**: Users can modify the API endpoint, model (e.g., GPT-4o-mini), prompt template, and TTS voice (e.g., Alloy, Nova) via the settings menu.
+
+## Technical Requirements
+
+### Required Fields
+For this add-on to function, the Note Type being used must include the following three fields:
+1. `Generated Sentence`
+2. `Generated Translation`
+3. `Generated Audio`
+
+### API Access
+An **OpenAI API Key** with a positive account balance is required. Users are responsible for their own API usage costs.
+
+---
+
+## Card Template Integration
+
+To display the generated content on your cards with a fallback to your original deck's content, add the following logic to your **Back Template**:
+
+```html
+{{#Generated Sentence}}
+  <div class="ai-sentence">{{Generated Sentence}}</div>
+  <div class="ai-translation">{{Generated Translation}}</div>
+  <hr />
+{{/Generated Sentence}}
+
+{{^Generated Sentence}}
+  <div class="original-sentence">{{Sentence}}</div>
+  <div class="original-translation">{{Translation}}</div>
+  <hr />
+{{/Generated Sentence}}
+
+<div class="media">
+  {{#Generated Audio}}
+    {{Generated Audio}}
+  {{/Generated Audio}}
+  {{^Generated Audio}}
+    {{SentenceAudio}}
+  {{/Generated Audio}}
+</div>
