@@ -6,26 +6,45 @@
 
 <h3>Functionality</h3>
 <ul>
-  <li><strong>Background Generation:</strong> Sentence and audio generation occurs in a background thread. This allows the user to continue their review session without waiting for the API response.</li>
-  <li><strong>i+1 Principle:</strong> The default prompt instructs the AI to generate sentences using simple vocabulary, ensuring that the target word is the only unfamiliar element in the sentence.</li>
-  <li><strong>Text-to-Speech (TTS):</strong> The add-on uses OpenAI’s <code>audio/speech</code> endpoint to generate MP3 files, which are saved directly to the Anki media folder and linked to the card.</li>
-  <li><strong>Automatic Highlighting:</strong> The add-on identifies the target word within the new sentence and applies <code>&lt;b&gt;</code> tags for visual clarity.</li>
-  <li><strong>Configurable Settings:</strong> Users can modify the API endpoint, model (e.g., GPT-4o-mini), prompt template, and TTS voice (e.g., Alloy, Nova) via the settings menu.</li>
+  <li><strong>Background Generation:</strong> Sentence and audio generation occurs in a background thread triggered when you answer <b>"Good"</b> or <b>"Easy"</b> (Ease score 3 or 4). This allows you to continue your review session without interruption.</li>
+  <li><strong>i+1 Principle:</strong> The system is designed to generate sentences using simple vocabulary that a learner would already know, ensuring the target word is the only "new" element.</li>
+  <li><strong>Text-to-Speech (TTS):</strong> Uses OpenAI’s <code>audio/speech</code> endpoint to generate high-fidelity MP3 files, saved directly to your Anki media folder.</li>
+  <li><strong>Automatic Highlighting:</strong> The add-on identifies the target word within the new sentence and applies <code>&lt;b&gt;</code> tags for visual clarity automatically.</li>
 </ul>
 
-<h3>Technical Requirements</h3>
-<p>For this add-on to function, the Note Type being used must include the following three fields:</p>
+<hr>
+
+<h3>Configuration & Setup</h3>
+<p>To enable Yujing, you must configure your Note Type and the add-on settings via <b>Tools > Yujing Settings</b>.</p>
+
+<h4>1. Required Note Fields</h4>
+<p>The Note Type you are using must include these three specific fields for the add-on to write data:</p>
 <ul>
-  <li><code>Generated Sentence</code></li>
-  <li><code>Generated Translation</code></li>
-  <li><code>Generated Audio</code></li>
+  <li><code>Generated Sentence</code>: The AI-generated example.</li>
+  <li><code>Generated Translation</code>: The translation of the new example.</li>
+  <li><code>Generated Audio</code>: The <code>[sound:...]</code> tag for the generated speech.</li>
 </ul>
-<p>An <strong>OpenAI API Key</strong> with a positive account balance is required. Users are responsible for their own API usage costs.</p>
+
+<h4>2. Settings Overview</h4>
+<ul>
+  <li><strong>API Key:</strong> Your OpenAI secret key.</li>
+  <li><strong>Target Word Field:</strong> The name of the field containing the word you are learning (e.g., <i>"Word"</i> or <i>"Expression"</i>).</li>
+  <li><strong>Model:</strong> Supports models like <code>gpt-4o-mini</code> (optimized for speed/cost) or <code>gpt-4o</code>.</li>
+  <li><strong>Audio Voice:</strong> Choose from OpenAI's neural voices: <i>alloy, echo, fable, onyx, nova, shimmer</i>.</li>
+</ul>
+
+<h4>3. Prompt Placeholders</h4>
+<p>The <b>Prompt Template</b> allows you to customize the AI's instructions. You must use the following placeholders to map card data correctly:</p>
+<ul>
+  <li><code>{Target}</code>: The word from your target field.</li>
+  <li><code>{Generated Sentence}</code>: The existing sentence on the card (helps the AI provide a <i>different</i> context).</li>
+  <li><code>{Generated Translation}</code>: The existing translation.</li>
+</ul>
 
 <hr>
 
 <h3>Card Template Example</h3>
-<p>To display the generated content on your cards, paste the following logic into your <strong>Back Template</strong>. This example shows the AI-generated sentence if it exists, otherwise it falls back to your original deck's sentence.</p>
+<p>Paste the following logic into your <b>Back Template</b>. This logic displays the AI-generated content if it exists, otherwise it falls back to your original deck content.</p>
 
 <pre><code>
 &lt;!-- AI-Generated Section --&gt;
@@ -55,15 +74,6 @@
 
 <hr>
 
-<h3>Workflow</h3>
-<ol>
-  <li>The user provides an OpenAI API key in <strong>Tools &gt; Yujing Settings</strong>.</li>
-  <li>During a review, if the user answers <strong>"Good"</strong> or <strong>"Easy"</strong> (Ease score 3 or 4), a background task is triggered.</li>
-  <li>The task sends the target word and the previous sentence to the API to request a new, unique example.</li>
-  <li>The <code>Generated Sentence</code>, <code>Generated Translation</code>, and <code>Generated Audio</code> fields are updated on the note.</li>
-  <li>The new content is displayed the next time that card appears in the review queue.</li>
-</ol>
-
 <h3>Development and Support</h3>
 <ul>
   <li><strong>Source Code:</strong> <a href="https://github.com/professionalgriefer/yujing">GitHub Repository</a></li>
@@ -72,4 +82,4 @@
 </ul>
 
 <hr>
-<p><i>Note: This add-on is a tool for generating supplemental study material via third-party AI services. Accuracy of translations and sentences is dependent on the AI model selected.</i></p>
+<p><i>Note: Accuracy of translations and sentences is dependent on the AI model selected. Users are responsible for their own OpenAI API usage costs.</i></p>
