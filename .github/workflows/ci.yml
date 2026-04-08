@@ -1,0 +1,13 @@
+name: Run checks & tests
+
+on:
+  push:
+    branches:
+      - "master"
+      - "main"
+      - "test"
+  pull_request:
+
+jobs:
+  checks:
+    uses: abdnh/anki-addon-actions/.github/workflows/ci.yml@main

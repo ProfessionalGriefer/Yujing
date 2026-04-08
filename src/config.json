@@ -1,0 +1,7 @@
+{
+  "api_endpoint": "https://api.openai.com/v1/chat/completions",
+  "api_key": "your-key-here",
+  "model": "gpt-3.5-turbo",
+  "prompt_template": "Generate a new example sentence for the target word: {Target}. Follow the i+1 principle: use simple vocabulary that a learner would already know, with only {Target} being the 'new' element. \n\nPrevious sentence: {Generated Sentence}\nPrevious translation: {Generated Translation}\n\nFormat your response strictly as: Sentence | Translation",
+  "target_field": "Word"
+}

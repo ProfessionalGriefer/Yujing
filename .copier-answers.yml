@@ -1,0 +1,13 @@
+_commit: 0.0.3-40-g6e93937
+_src_path: https://github.com/abdnh/anki-addon-template
+add_author_support_links: false
+ankiweb_id: '1'
+author: Vincent Nahn
+docs_page: ''
+email: vincentnahn@gmail.com
+forums_page: ''
+github_page: https://github.com/professionalgriefer/yujing
+max_point_version: 0
+min_point_version: 50
+package_name: yujing
+project_name: YuJing

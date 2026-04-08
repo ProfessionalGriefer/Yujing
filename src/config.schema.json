@@ -1,0 +1,36 @@
+{
+  "type": "object",
+  "properties": {
+    "api_endpoint": {
+      "type": "string",
+      "title": "API Endpoint",
+      "description": "The URL of the OpenAI-compatible API (e.g., https://api.openai.com/v1/chat/completions)."
+    },
+    "api_key": {
+      "type": "string",
+      "title": "API Key",
+      "description": "Your API secret key for the provider."
+    },
+    "model": {
+      "type": "string",
+      "title": "Model",
+      "description": "The specific AI model to use (e.g., gpt-4o, gpt-3.5-turbo)."
+    },
+    "target_field": {
+      "type": "string",
+      "title": "Target Word Field",
+      "description": "The name of the field containing the word you are learning (e.g., 'Word' or 'Expression')."
+    },
+    "prompt_template": {
+      "type": "string",
+      "title": "Prompt Template",
+      "description": "Use {Target}, {Generated Sentence}, and {Generated Translation} as placeholders. Ensure the prompt asks for i+1 logic.",
+      "format": "multiline"
+    },
+    "report_errors": {
+      "type": "boolean",
+      "title": "Report Errors",
+      "description": "If enabled, the extension will show a popup notification if a background generation fails."
+    }
+  }
+}
