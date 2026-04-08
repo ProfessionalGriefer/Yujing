@@ -14,11 +14,7 @@ zip args='':
 
 # Install dependencies to src/vendor
 vendor:
-	{{UV_RUN}} python -m ankiscripts.vendor
-
-# Run protobuf generation
-proto:
-	{{UV_RUN}} python -m ankiscripts.protobuf
+  uv pip install openai pydantic --target vendor
 
 # Format using Ruff
 ruff *files:
@@ -86,3 +82,7 @@ sourcedist:
 # Clean up build files
 clean:
 	rm -rf build/
+
+link:
+   ln -s "/Users/vincent/code/yujing-anki/src" "/Users/vincent/Library/Application Support/Anki2/addons21/yujing"
+

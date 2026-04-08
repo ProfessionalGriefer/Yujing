@@ -8,15 +8,12 @@ authors = [{ name = "Vincent Nahn", email = "vincentnahn@gmail.com" }]
 readme = "README.md"
 requires-python = ">=3.9"
 classifiers = [
-    "Programming Language :: Python",
-    "Programming Language :: Python :: 3",
+  "Programming Language :: Python",
+  "Programming Language :: Python :: 3",
 ]
 license = "AGPL-3.0-or-later"
 dynamic = ["version"]
-dependencies = [
-    "aqt>=25.9.2",
-    "requests>=2.32.4",
-]
+dependencies = ["aqt>=25.9.2", "requests>=2.32.4"]
 
 [tool.setuptools]
 package-dir = { "yujing" = "src" }
@@ -27,12 +24,12 @@ ankiutils = { git = "https://github.com/abdnh/ankiutils", branch = "master" }
 
 [dependency-groups]
 dev = [
-    "aqt[qt]",
-    "mypy>=1.15.0",
-    "prek>=0.2.30",
-    "pytest>=8.3.5",
-    "pytest-cov>=6.1.1",
-    "ruff>=0.11.7",
+  "aqt[qt]",
+  "mypy>=1.15.0",
+  "prek>=0.2.30",
+  "pytest>=8.3.5",
+  "pytest-cov>=6.1.1",
+  "ruff>=0.11.7",
 ]
 
 [project.urls]
@@ -40,14 +37,14 @@ Repository = "https://github.com/professionalgriefer/yujing"
 
 [tool.ruff]
 extend-exclude = [
-    ".venv",
-    "ankidata",
-    "vendor",
-    "forms",
-    "user_files",
-    "build",
-    "node_modules",
-    "proto",
+  ".venv",
+  "ankidata",
+  "vendor",
+  "forms",
+  "user_files",
+  "build",
+  "node_modules",
+  "proto",
 ]
 line-length = 120
 
