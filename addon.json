@@ -1,12 +1,14 @@
 {
-    "ankiweb_id": "1",
-    "homepage": "https://github.com/professionalgriefer/yujing",
-    "min_point_version": 50,
-    "name": "YuJing",
-    "package": "yujing",
-    "support_channels": {
-        "forums": "",
-        "github": "https://github.com/professionalgriefer/yujing/issues"
-    },
-    "docs_page": ""
+  "display_name": "Yujing 语境",
+  "module_name": "yujing",
+  "repo_name": "yujing",
+  "ankiweb_id": "1",
+  "author": "professionalgriefer",
+  "homepage": "https://github.com/professionalgriefer/yujing",
+  "targets": ["anki21"],
+  "conflicts": [],
+  "min_point_version": 50,
+  "support_channels": {
+    "github": "https://github.com/professionalgriefer/yujing/issues"
+  }
 }

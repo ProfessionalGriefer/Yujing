@@ -126,4 +126,3 @@ def generate_sentence_task(note_id, target_word, prev_sentence, prev_translation
 
         print(f"Yujing Error: {error_msg}")
         mw.taskman.run_on_main(lambda: showCritical(f"Yujing Background Generation Failed:\n\n{error_msg}"))
-
